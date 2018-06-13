@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Simple Login</string>
+    <string name="welcome">Welcome</string>
+    <string name="age">You are</string>
+</resources>
