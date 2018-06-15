@@ -8,5 +8,14 @@
         <item name="colorAccent">@color/buttonBackground</item>
         <item name="colorButtonNormal">@color/buttonBackground</item>
     </style>
-
+    <style name="ratingStars" parent="@android:style/Widget.RatingBar">
+        <item name="android:progressDrawable">@drawable/ic_star_black_24dp</item>
+        <item name="android:minHeight">22dip</item>
+        <item name="android:maxHeight">22dip</item>
+    </style>
+    <style name="locationIcon">
+        <item name="android:progressDrawable">@drawable/ic_location</item>
+        <item name="android:minHeight">22dip</item>
+        <item name="android:maxHeight">22dip</item>
+    </style>
 </resources>

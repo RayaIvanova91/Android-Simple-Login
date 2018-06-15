@@ -3,7 +3,6 @@ package com.example.rayaivanova.lesson33;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -12,7 +11,6 @@ import android.widget.Toast;
 import com.example.rayaivanova.lesson33.model.User;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -43,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
                 validData();
                 if (valid) {
                     User user = getUser(username.getText().toString());
-                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                    Intent intent = new Intent(MainActivity.this, HotelsActivity.class);
                     intent.putExtra("user", user);
                     MainActivity.this.startActivity(intent);
                 } else {
@@ -52,7 +50,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         register = findViewById(R.id.register);
-        register.setOnClickListener(registerListener);
+        register.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, RegisterActivity.class);
+                startActivityForResult(intent, 4);
+            }
+        });
     }
 
     @Override
@@ -90,13 +94,6 @@ public class MainActivity extends AppCompatActivity {
         Log.e("MainActivity", "onPause");
     }*/
 
-    View.OnClickListener registerListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            Intent intent = new Intent(MainActivity.this, RegisterActivity.class);
-            startActivityForResult(intent, 4);
-        }
-    };
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

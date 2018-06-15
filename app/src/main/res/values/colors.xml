@@ -5,5 +5,7 @@
     <color name="colorAccent">#FF4081</color>
     <color name="buttonBackground">#4c4663</color>
     <color name="screenBackground">#cdd9ff</color>
+    <color name="ratingButtonBackgroun">#003580</color>
+    <color name="noPrepaymentColor">#0ab21b</color>
     <color name="white">#ffffff</color>
 </resources>
