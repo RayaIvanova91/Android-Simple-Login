@@ -2,9 +2,12 @@ package com.example.rayaivanova.lesson33;
 
 import android.content.Context;
 import android.media.Image;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,22 +41,34 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.HotelViewHol
 
     @Override
     public void onBindViewHolder(@NonNull HotelViewHolder holder, int position) {
-        Hotel hotel = hotels.get(position);
+        final Hotel hotel = hotels.get(position);
         holder.image.setImageResource(hotel.getImage());
+
+        holder.image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (context instanceof HotelsActivity) {
+                    Log.e("onClickListener", "imagea e kliknat");
+                    ((HotelsActivity) context).showDetails(hotel);
+                }
+            }
+        });
+
+
         holder.name.setText(hotel.getName());
         double rating = hotel.getRating();
         holder.rating.setText("" + rating);
         String hotelRating = getStringRating(rating);
         holder.ratingString.setText(hotelRating);
-        holder.address.setText("" + hotel.getDistanceFromCenter() + context.getResources().getString(R.string.distance)+" " + hotel.getAddress());
+        holder.address.setText("" + hotel.getDistanceFromCenter() + context.getResources().getString(R.string.distance) + " " + hotel.getAddress());
         holder.price.setText("" + hotel.getPrice() + context.getResources().getString(R.string.currency));
         holder.prepayment.setText("");
-        for (int i=0; i<5;i++){
+        for (int i = 0; i < 5; i++) {
             holder.stars.get(i).setVisibility(View.INVISIBLE);
         }
-        if(hotel.getCountStars()>Hotel.MIN_STARS_COUNT){
-            int numStars=hotel.getCountStars();
-            for (int i=0; i<numStars;i++){
+        if (hotel.getCountStars() > Hotel.MIN_STARS_COUNT) {
+            int numStars = hotel.getCountStars();
+            for (int i = 0; i < numStars; i++) {
                 holder.stars.get(i).setVisibility(View.VISIBLE);
             }
         }
@@ -102,7 +117,7 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.HotelViewHol
 
         HotelViewHolder(View v) {
             super(v);
-            stars=new ArrayList<>();
+            stars = new ArrayList<>();
             this.image = v.findViewById(R.id.hotel_image);
             this.name = v.findViewById(R.id.hotel_name);
             this.rating = v.findViewById(R.id.hotel_rating_num);

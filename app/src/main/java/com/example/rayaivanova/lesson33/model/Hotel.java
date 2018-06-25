@@ -1,6 +1,8 @@
 package com.example.rayaivanova.lesson33.model;
 
-public class Hotel {
+import java.io.Serializable;
+
+public class Hotel implements Serializable{
     public static final int MIN_STARS_COUNT = 0;
     public static final int MAX_STARS_COUNT = 5;
     int image;

@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             users = new ArrayList<>();
         }
+        users.add(new User("raya", "12", "raya@abv.bg", false, 26));
         username = findViewById(R.id.username);
         password = this.findViewById(R.id.password);
         login = this.findViewById(R.id.login);
@@ -70,30 +71,6 @@ public class MainActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
         outState.putSerializable("users", users);
     }
-    /*   @Override
-    protected void onStop() {
-        super.onStop();
-        Log.e("MainActivity", "onStop");
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.e("MainActivity", "onDestroy");
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        Log.e("MainActivity", "onRestart");
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Log.e("MainActivity", "onPause");
-    }*/
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

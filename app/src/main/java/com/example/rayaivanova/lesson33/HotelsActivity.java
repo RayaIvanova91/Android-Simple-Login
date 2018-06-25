@@ -1,59 +1,92 @@
 package com.example.rayaivanova.lesson33;
 
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.example.rayaivanova.lesson33.model.Hotel;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class HotelsActivity extends AppCompatActivity {
+public class HotelsActivity extends AppCompatActivity implements HotelDetailsFragment.DetailsComunicator, HotelListFragment.HotelListComunicator {
 
     private RecyclerView recyclerView;
     private List<Hotel> hotels;
+    Fragment allHotels;
+    Hotel hotel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hotels);
-        //1) namiram konkretnoto RecyclerView
-        recyclerView = findViewById(R.id.hotels);
 
-        //2) List s hoteli
-        hotels = new ArrayList<Hotel>();
-        hotels.add(new Hotel(3, R.drawable.hotel1,"Aspria Hamburg", 7.5, "Winterhude, Hamburg",12, 220, true));
-        hotels.add(new Hotel(2, R.drawable.hotel2,"Holiday Inn", 8.3, "St. Pauli, Hamburg",5, 350, true));
-        hotels.add(new Hotel(0,R.drawable.hotel3,"Hotel Mare", 5, "Hamburg City Center (New Town), Hamburg",15, 100, false));
-        hotels.add(new Hotel(5, R.drawable.hotel4,"Dorint Hotel", 9, "St. Georg, Hamburg",2, 400, true));
-        hotels.add(new Hotel(4, R.drawable.hotel5,"Crowne Plaza", 8, "Hamburg City Center (Old Town), Hamburg",4, 300, false));
-        hotels.add(new Hotel(2, R.drawable.hotel6,"NIPPON HOTEL Hamburg Boutique 072 Hamburg St. Georg", 4, "Harvestehude, Hamburg",10, 150, false));
-        hotels.add(new Hotel(5, R.drawable.hotel7,"Sofitel Hamburg", 7, "Stellingen, Hamburg",11, 50, true));
-        hotels.add(new Hotel(1, R.drawable.hotel8,"Hyperion Hotel", 7.5, "Lokstedt, Hamburg",4, 800, false));
-        hotels.add(new Hotel(1, R.drawable.hotel1,"Aspria Hamburg", 7.5, "Winterhude, Hamburg",12, 220, true));
-        hotels.add(new Hotel(4, R.drawable.hotel2,"Holiday Inn", 8.3, "St. Pauli, Hamburg",5, 350, true));
-        hotels.add(new Hotel(5, R.drawable.hotel3,"Hotel Mare", 5, "Hamburg City Center (New Town), Hamburg",15, 100, false));
-        hotels.add(new Hotel(5, R.drawable.hotel4,"Dorint Hotel", 9, "St. Georg, Hamburg",2, 400, true));
-        hotels.add(new Hotel(4, R.drawable.hotel5,"Crowne Plaza", 8, "Hamburg City Center (Old Town), Hamburg",4, 300, false));
-        hotels.add(new Hotel(3, R.drawable.hotel6,"NIPPON HOTEL Hamburg", 4, "Harvestehude, Hamburg",10, 150, false));
-        hotels.add(new Hotel(5, R.drawable.hotel7,"Sofitel Hamburg", 7, "Stellingen, Hamburg",11, 50, true));
-        hotels.add(new Hotel(5, R.drawable.hotel8,"Hyperion Hotel", 7.5, "Lokstedt, Hamburg",4, 800, false));
-        hotels.add(new Hotel(5, R.drawable.hotel1,"Aspria Hamburg", 7.5, "Winterhude, Hamburg",12, 220, true));
-        hotels.add(new Hotel(2, R.drawable.hotel2,"Holiday Inn", 8.3, "St. Pauli, Hamburg",5, 350, true));
-        hotels.add(new Hotel(4,R.drawable.hotel3,"Hotel Mare", 5, "Hamburg City Center (New Town), Hamburg",15, 100, false));
-        hotels.add(new Hotel(4,R.drawable.hotel4,"Dorint Hotel", 9, "St. Georg, Hamburg",2, 400, true));
-        hotels.add(new Hotel(5,R.drawable.hotel5,"Crowne Plaza", 8, "Hamburg City Center (Old Town), Hamburg",4, 300, false));
-        hotels.add(new Hotel(4,R.drawable.hotel6,"NIPPON HOTEL Hamburg", 4, "Harvestehude, Hamburg",10, 150, false));
-        hotels.add(new Hotel(1,R.drawable.hotel7,"Sofitel Hamburg", 7, "Stellingen, Hamburg",11, 50, true));
-        hotels.add(new Hotel(4,R.drawable.hotel8,"Hyperion Hotel", 7.5, "Lokstedt, Hamburg",4, 800, false));
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction fTransaction = fm.beginTransaction();
+        allHotels = new HotelListFragment();
 
+        if (findViewById(R.id.land_id) == null) {
 
-        //3) Adapter i LayoutManager na RecyclerView-to
-        recyclerView.setAdapter(new HotelAdapter(hotels, this));
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+            fTransaction.replace(R.id.hotels_activity, allHotels, "HotelList").commit();
+        } else {
+            Log.e("mamati", findViewById(R.id.land_id) == null ? "null" : "not null");
+            fTransaction.replace(R.id.land_id, allHotels, "HotelList").commit();
+        }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.e("HotelsActivity", "onDestroy");
+    }
+
+    @Override
+    public void showDetails(Hotel hotel) {
+        FragmentManager fm = getSupportFragmentManager();
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("hotel", hotel);
+        HotelDetailsFragment hotelDetailsFragment = new HotelDetailsFragment();
+        hotelDetailsFragment.setArguments(bundle);
+        FragmentTransaction fTransaction = fm.beginTransaction();
+
+        if (findViewById(R.id.land_id) == null) {
+            //portrait mode
+            //do whatever we do in portrait - replace fragment
+            fTransaction.replace(R.id.hotels_activity, hotelDetailsFragment, "HotelDetails").commit();
+        } else {
+            //land mode
+            //add fragment
+            //if no details on screen, add fragment
+            if (fm.findFragmentByTag("HotelDetails") == null) {
+                fTransaction.add(R.id.land_id, hotelDetailsFragment, "HotelDetails").commit();
+            }
+            //if any details in landscape, replace just the details fragment (not all fragments on the screen)
+            else {
+                fTransaction.remove(fm.findFragmentByTag("HotelDetails")).add(R.id.land_id, hotelDetailsFragment, "HotelDetails").commit();
+            }
+        }
+    }
+
+    @Override
+    public void backToHotels() {
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        //in landscape remove details and only the list should stay
+        if(findViewById(R.id.land_id)!=null){
+            ft.remove(fm.findFragmentByTag("HotelDetails")).commit();
+        }
+        //in portrait replace the details with the list
+        else{
+        allHotels = new HotelListFragment();
+        ft.replace(R.id.hotels_activity, allHotels, "HotelList").commit();}
+    }
 
 }
